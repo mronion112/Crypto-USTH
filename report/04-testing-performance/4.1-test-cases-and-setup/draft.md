@@ -49,29 +49,29 @@ C1–C2 tuân theo cấu hình RSA-PSS trong FIPS 186-5 [[1]](../4.2-cpu-gpu-key
 
 ### RSA toy
 
-Mỗi mẫu là một modulus `n = p * q` có độ dài 32, 40, 48 hoặc 56 bit; `p` và `q` là số nguyên tố ngẫu nhiên có kích thước xấp xỉ một nửa modulus. Với mỗi kích thước, 10 modulus được sinh từ seed cố định `20261105`. Lần quét toàn bộ dùng mẫu đầu tiên; 10 lần đo thời gian khôi phục dùng lần lượt 10 mẫu.
+Mỗi mẫu là một modulus $n = p \cdot q$ có độ dài 32, 40, 48 hoặc 56 bit; $p$ và $q$ là số nguyên tố ngẫu nhiên có kích thước xấp xỉ một nửa modulus. Với mỗi kích thước, 10 modulus được sinh từ seed cố định `20261105`. Lần quét toàn bộ dùng mẫu đầu tiên; 10 lần đo thời gian khôi phục dùng lần lượt 10 mẫu.
 
-Bài toán được phát biểu là tìm một ước không tầm thường của `n` bằng cách thử các ứng viên dạng `6k - 1` và `6k + 1`. Nghiệm được xác nhận khi `p * q = n` và cả hai thừa số vượt qua kiểm tra Miller-Rabin xác định.
+Bài toán được phát biểu là tìm một ước không tầm thường của $n$ bằng cách thử các ứng viên dạng $6k - 1$ và $6k + 1$. Nghiệm được xác nhận khi $p \cdot q = n$ và cả hai thừa số vượt qua kiểm tra Miller-Rabin xác định.
 
 ### ECDLP toy
 
-Ba đường cong Weierstrass ngắn `y^2 = x^3 + ax + b (mod p)` được sinh ngẫu nhiên với `p` có 18, 22 và 26 bit. Công cụ sinh đường cong đếm điểm bằng ký hiệu Legendre, phân tích bậc nhóm và chọn một nhóm con cấp nguyên tố `q`. Bảng 4.2 ghi tham số đã dùng.
+Ba đường cong Weierstrass ngắn $y^2 \equiv x^3 + ax + b \pmod{p}$ được sinh ngẫu nhiên với $p$ có 18, 22 và 26 bit. Công cụ sinh đường cong đếm điểm bằng ký hiệu Legendre, phân tích bậc nhóm và chọn một nhóm con cấp nguyên tố $q$. Bảng 4.2 ghi tham số đã dùng.
 
 **Bảng 4.2. Tham số đường cong toy**
 
-| `p` bits | `p` | `q` | Bậc nhóm | Đối hạng |
+| $p$ bits | $p$ | $q$ | Bậc nhóm | Đối hạng |
 |---|---|---|---|---|
 | 18 | 163987 | 81737 | 163474 | 2 |
 | 22 | 2610967 | 2609701 | 2609701 | 1 |
 | 26 | 54523747 | 54518393 | 54518393 | 1 |
 
-Với mỗi đường cong, 10 khóa bí mật `d` được sinh trong khoảng `[1, q - 1]`; khóa công khai là `Q = dG`. Lần quét toàn bộ dùng khóa đầu tiên; 10 lần đo khôi phục dùng lần lượt 10 khóa.
+Với mỗi đường cong, 10 khóa bí mật $d$ được sinh trong khoảng $[1, q - 1]$; khóa công khai là $Q = dG$. Lần quét toàn bộ dùng khóa đầu tiên; 10 lần đo khôi phục dùng lần lượt 10 khóa.
 
 Các đường cong này là đường cong thường (ordinary) nhưng rất nhỏ. Chúng chỉ dùng để đo chi phí tìm kiếm vét cạn, không đại diện cho đường cong chuẩn và không dùng để suy ra độ an toàn của ECDSA, Ed25519 hay SM2.
 
 ### Nonce reuse và smoke test
 
-Test case I1 dùng đường cong P-256 chuẩn, sinh một khóa thử nghiệm và hai chữ ký có cùng nonce. Khóa được khôi phục bằng đại số từ hai phương trình chữ ký; không có bước tìm kiếm khóa. Kết quả được xác nhận bằng `dG = Q` và bằng xác minh chữ ký độc lập qua thư viện `cryptography`. Rủi ro tái sử dụng nonce và yêu cầu sinh nonce duy nhất được quy định trong FIPS 186-5 [[1]](../4.2-cpu-gpu-key-recovery/references.md#ref-1) và RFC 6979 [[7]](../4.2-cpu-gpu-key-recovery/references.md#ref-7).
+Test case I1 dùng đường cong P-256 chuẩn, sinh một khóa thử nghiệm và hai chữ ký có cùng nonce. Khóa được khôi phục bằng đại số từ hai phương trình chữ ký; không có bước tìm kiếm khóa. Kết quả được xác nhận bằng $dG = Q$ và bằng xác minh chữ ký độc lập qua thư viện `cryptography`. Rủi ro tái sử dụng nonce và yêu cầu sinh nonce duy nhất được quy định trong FIPS 186-5 [[1]](../4.2-cpu-gpu-key-recovery/references.md#ref-1) và RFC 6979 [[7]](../4.2-cpu-gpu-key-recovery/references.md#ref-7).
 
 Các smoke test C1–C8 sinh khóa ngắn hạn trong bộ nhớ, ký một thông điệp cố định và xác minh ngay. Không có khóa riêng nào được ghi vào kho dữ liệu.
 

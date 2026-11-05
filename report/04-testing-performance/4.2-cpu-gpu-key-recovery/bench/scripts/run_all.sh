@@ -18,7 +18,8 @@ python3 bench/scripts/gen_vectors.py
 python3 bench/scripts/smoke_sign_verify.py
 python3 bench/scripts/nonce_reuse.py
 python3 bench/scripts/run_bench.py
+python3 bench/scripts/run_rho.py
 python3 bench/scripts/plot_results.py
 
-echo "CPU benchmark complete."
+echo "CPU benchmark and Pollard rho comparison complete."
 echo "Run bench/scripts/run_gpu.sh on a CUDA-capable host to collect GPU data."

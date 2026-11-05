@@ -77,6 +77,50 @@ def plot_scaling(rows: list[dict]) -> None:
     print(f"wrote {path}")
 
 
+def plot_rho(cpu_rows: list[dict], rho_rows: list[dict]) -> None:
+    figure, axes = plt.subplots(1, 2, figsize=(10.0, 4.2), sharey=True)
+    for axis, case, title in zip(axes, ("rsa", "ecc"), ("RSA toy", "ECDLP toy")):
+        brute = {
+            int(row["bits"]): float(row["median_ms"])
+            for row in cpu_rows
+            if row["case"] == case
+            and row["mode"] == "recovery"
+            and int(row["threads"]) == 1
+        }
+        rho = {
+            int(row["bits"]): float(row["median_ms"])
+            for row in rho_rows
+            if row["case"] == case
+        }
+        bits_values = sorted(set(brute) & set(rho))
+        if not bits_values:
+            continue
+        axis.plot(
+            bits_values,
+            [brute[bits] for bits in bits_values],
+            marker="o",
+            label="brute force, 1 thread",
+        )
+        axis.plot(
+            bits_values,
+            [rho[bits] for bits in bits_values],
+            marker="s",
+            label="Pollard rho",
+        )
+        axis.set_title(title)
+        axis.set_xlabel("Toy key size (bits)")
+        axis.set_xticks(bits_values)
+        axis.set_yscale("log")
+        axis.grid(True, which="both", alpha=0.3)
+        axis.legend()
+    axes[0].set_ylabel("Median recovery time (ms, log scale)")
+    figure.tight_layout()
+    path = FIGURES_DIR / "fig_rho_vs_bruteforce.png"
+    figure.savefig(path, dpi=200)
+    plt.close(figure)
+    print(f"wrote {path}")
+
+
 def plot_gpu(cpu_rows: list[dict], gpu_rows: list[dict], path: Path, label: str) -> None:
     if not gpu_rows:
         return
@@ -167,6 +211,12 @@ def main() -> int:
             plot_gpu(cpu_rows, read_csv(gpu_path), figure_path, label)
         else:
             print(f"no summary at {gpu_path}; skipping {label} figure")
+
+    rho_path = SUMMARY_DIR / "rho_summary.csv"
+    if rho_path.exists():
+        plot_rho(cpu_rows, read_csv(rho_path))
+    else:
+        print(f"no summary at {rho_path}; skipping Pollard rho figure")
 
     return 0
 

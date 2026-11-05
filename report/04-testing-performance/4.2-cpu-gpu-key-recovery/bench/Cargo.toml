@@ -16,6 +16,10 @@ path = "src/main.rs"
 name = "gen-curve"
 path = "src/bin/gen_curve.rs"
 
+[[bin]]
+name = "rho-bench"
+path = "src/bin/rho_bench.rs"
+
 [profile.release]
 opt-level = 3
 lto = "thin"

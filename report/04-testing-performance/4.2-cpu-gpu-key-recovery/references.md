@@ -25,3 +25,9 @@
 <a id="ref-12" name="ref-12"></a> [12] A. K. Lenstra, H. W. Lenstra, Jr., M. S. Manasse, and J. M. Pollard, "The number field sieve," in *Proceedings of the 22nd Annual ACM Symposium on Theory of Computing (STOC '90)*, 1990, pp. 564–572.
 
 <a id="ref-13" name="ref-13"></a> [13] Tracel AI, "CubeCL: Multi-platform high-performance compute language extension for Rust," version 0.11.3, 2026. [Online]. Available: https://github.com/tracel-ai/cubecl
+
+<a id="ref-14" name="ref-14"></a> [14] J. M. Pollard, "A Monte Carlo method for factorization," *BIT Numerical Mathematics*, vol. 15, no. 3, pp. 331–334, 1975. doi: 10.1007/BF01933667.
+
+<a id="ref-15" name="ref-15"></a> [15] R. P. Brent, "An improved Monte Carlo factorization algorithm," *BIT Numerical Mathematics*, vol. 20, no. 2, pp. 176–184, 1980. doi: 10.1007/BF01933190.
+
+<a id="ref-16" name="ref-16"></a> [16] P. C. van Oorschot and M. J. Wiener, "Parallel collision search with cryptanalytic applications," *Journal of Cryptology*, vol. 12, no. 1, pp. 1–28, 1999. doi: 10.1007/PL00003816.
