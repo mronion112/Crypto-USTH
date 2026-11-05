@@ -14,6 +14,14 @@ Với đường cong `y^2 = x^3 + ax + b (mod p)`, điểm cơ sở `G` có bậ
 
 Ba đường cong 18, 22 và 26 bit được sinh ngẫu nhiên; bậc nhóm được đếm bằng ký hiệu Legendre và phân tích thành nhân tử để chọn nhóm con cấp nguyên tố. Tham số nằm trong `bench/config/curves.json`.
 
+### Phạm vi lựa chọn
+
+Benchmark chỉ đo RSA và ECDLP vì đây là hai bài toán cơ sở đại diện cho hai mô hình tính toán khác nhau: phân tích số nguyên và logarit rời rạc trên đường cong elliptic. RSA toy đo chi phí phân tích modulus, không đo riêng RSA-PSS; RSA-PSS chỉ là một cách dùng khóa RSA.
+
+ECDSA, Ed25519 và SM2 đều dựa trên ECDLP. Phép nhân vô hướng là phần lõi chung của cả ba, nên kết quả ECDLP áp dụng cho chúng ở mức phép toán lõi; khác biệt chủ yếu nằm ở tham số đường cong, encoding và quy trình ký, không tạo ra bài toán khôi phục khóa mới.
+
+ML-DSA dựa trên lattice (MLWE/MSIS), không có không gian khóa nhỏ để vét cạn theo cùng nghĩa. Đo ML-DSA cần benchmark riêng cho NTT, sampling và nén, không so sánh trực tiếp với RSA/ECDLP. Các thuật toán RSA-PSS, ECDSA P-256, Ed25519, SM2 và ML-DSA vẫn được kiểm tra correctness trong mục 4.1; mục 4.2 chỉ giới hạn ở đo hiệu năng khôi phục khóa.
+
 ### Chế độ đo
 
 - **Full scan:** duyệt toàn bộ không gian, dùng để tính tốc độ xử lý ứng viên.
