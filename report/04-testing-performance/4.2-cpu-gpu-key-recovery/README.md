@@ -140,4 +140,4 @@ See `bench/gpu-cubecl/README.md` for kernel and timing details.
 - The ECDLP toy search is brute force, not Pollard's rho.
 - The results are hardware- and implementation-specific.
 - GPU wall time includes host/device transfers and kernel launch overhead; the
-  kernel time is reported separately.
+  CubeCL path does not expose kernel-only timing.

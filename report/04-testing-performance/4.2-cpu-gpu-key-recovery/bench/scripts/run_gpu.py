@@ -116,10 +116,8 @@ def summarize_rows(rows: list[dict]) -> list[dict]:
     summary = []
     for (case, mode, bits, block), group in sorted(groups.items()):
         wall = [int(row["wall_ns"]) / 1_000_000 for row in group]
-        kernel = [int(row["kernel_ns"]) / 1_000_000 for row in group]
         rates = [float(row["rate_mcand_s"]) for row in group]
         wall_stats = summarize(wall)
-        kernel_stats = summarize(kernel)
         summary.append(
             {
                 "case": case,
@@ -131,7 +129,6 @@ def summarize_rows(rows: list[dict]) -> list[dict]:
                 "iqr_ms": wall_stats["iqr"],
                 "min_ms": wall_stats["min"],
                 "max_ms": wall_stats["max"],
-                "median_kernel_ms": kernel_stats["median"],
                 "median_rate_mcand_s": sorted(rates)[len(rates) // 2],
                 "all_recovered": int(all(int(row["recovered"]) == 1 for row in group)),
                 "all_verified": int(all(int(row["verified"]) == 1 for row in group)),
@@ -153,7 +150,6 @@ def render_markdown(summary: list[dict]) -> str:
                     row["block"],
                     row["runs"],
                     f"{row['median_ms']:.3f}",
-                    f"{row['median_kernel_ms']:.3f}",
                     f"{row['iqr_ms']:.3f}",
                     f"{row['median_rate_mcand_s']:.3f}" if mode == "full" else "-",
                     row["all_verified"],
@@ -168,7 +164,6 @@ def render_markdown(summary: list[dict]) -> str:
                         "Block",
                         "Runs",
                         "Median ms",
-                        "Kernel ms",
                         "IQR ms",
                         "M candidates/s",
                         "Verified",

@@ -27,7 +27,7 @@ ML-DSA dựa trên lattice (MLWE/MSIS), không có không gian khóa nhỏ để
 - **Full scan:** duyệt toàn bộ không gian, dùng để tính tốc độ xử lý ứng viên.
 - **Recovery:** chọn một khóa mục tiêu ngẫu nhiên, dừng khi tìm thấy, dùng để đo thời gian khôi phục.
 
-CPU dùng 1 và 12 luồng. GPU dùng block 256. Mỗi cấu hình có một lần warm-up và 10 lần đo; báo cáo trung vị, IQR, nhỏ nhất và lớn nhất. GPU dùng cùng không gian tìm kiếm và cùng tiêu chí xác nhận; thời gian kernel và thời gian end-to-end được báo riêng.
+CPU dùng 1 và 12 luồng. GPU dùng block 256. Mỗi cấu hình có một lần warm-up và 10 lần đo; báo cáo trung vị, IQR, nhỏ nhất và lớn nhất. GPU dùng cùng không gian tìm kiếm và cùng tiêu chí xác nhận; CubeCL chỉ báo thời gian end-to-end sau warm-up, không tách thời gian kernel.
 
 ## 4.2.2 Kết quả CPU
 
