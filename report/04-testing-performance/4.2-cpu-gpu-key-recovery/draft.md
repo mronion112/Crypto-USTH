@@ -27,7 +27,7 @@ ML-DSA dựa trên lattice (MLWE/MSIS), không có không gian khóa nhỏ để
 - **Full scan:** duyệt toàn bộ không gian, dùng để tính tốc độ xử lý ứng viên.
 - **Recovery:** chọn một khóa mục tiêu ngẫu nhiên, dừng khi tìm thấy, dùng để đo thời gian khôi phục.
 
-CPU dùng 1 và 12 luồng. GPU dùng block 256. Mỗi cấu hình có một lần warm-up và 10 lần đo; báo cáo trung vị, IQR, nhỏ nhất và lớn nhất. GPU dùng cùng không gian tìm kiếm và cùng tiêu chí xác nhận; CubeCL chỉ báo thời gian end-to-end sau warm-up, không tách thời gian kernel.
+Cấu hình phần cứng và phần mềm dùng chung với Bảng 4.1 ở mục 4.1. CPU dùng 1 và 12 luồng. GPU dùng block 256. Mỗi cấu hình có một lần warm-up và 10 lần đo; báo cáo trung vị, IQR, nhỏ nhất và lớn nhất. GPU dùng cùng không gian tìm kiếm và cùng tiêu chí xác nhận; CubeCL chỉ báo thời gian end-to-end sau warm-up, không tách thời gian kernel.
 
 ## 4.2.2 Kết quả CPU
 
@@ -178,9 +178,27 @@ Không benchmark GPU rho trong mục này. Pollard rho là một walk có phụ 
 
 GNFS không được đưa vào benchmark. Với modulus 32–56 bit, GNFS có overhead lớn và không cạnh tranh với rho/Brent [[12]](references.md#ref-12); cài đặt đầy đủ cũng nằm ngoài phạm vi. GNFS chỉ có lợi ở modulus lớn hơn nhiều, khi đó bài toán không còn là toy và cần arithmetic cùng linear algebra khác.
 
-## 4.2.6 Kết luận của mục
+## 4.2.6 Giả định và câu hỏi rà soát
 
-Trong phạm vi tham số toy, thời gian khôi phục tăng nhanh khi tăng kích thước khóa. RSA toy tăng gần theo $2^{b/2}$; ECDLP toy tăng gần theo bậc của nhóm con. Song song hóa bằng 12 luồng cho mức tăng tốc khoảng 4.88–5.82 lần ở các kích thước đủ lớn, phù hợp với 6 lõi vật lý của máy. GPU CubeCL nhanh hơn CPU brute force cho RSA (3.69–9.13 lần full; 3.00–7.63 lần recovery) và ECDLP 18 bit (4.68 lần full; 3.18 lần recovery), nhưng chậm hơn cho ECDLP 22–26 bit do mỗi thread GPU thực hiện nhân vô hướng đầy đủ, trong khi CPU chỉ cộng điểm mỗi ứng viên. Pollard rho CPU giảm số bước 27.5–2505 lần và nhanh hơn brute force 1 luồng 9.05–448.81 lần; so với GPU brute-force recovery, rho CPU còn nhanh hơn 10.1 lần ở RSA 56 bit và 66.5 lần ở ECDLP 26 bit. Vì vậy GPU brute force không đại diện cho chi phí tấn công tốt nhất. Các kết quả này cho thấy lựa chọn thuật toán quan trọng hơn nền tảng; chúng không chứng minh khả năng phá khóa chuẩn và không thay thế phân tích GNFS, đánh giá Pollard’s rho ở tham số chuẩn hay tấn công nonce.
+Giả định:
+
+- Các modulus và đường cong là toy, sinh cố định từ seed; không đại diện cho khóa chuẩn.
+- CPU và GPU được đo trên cùng máy, nguồn AC, không ghim CPU; mỗi cấu hình có 10 lần đo và dùng trung vị/IQR.
+- CubeCL chỉ báo wall time; không có số đo kernel-only.
+- Pollard rho là thuật toán xác suất; trung vị trên 10 seed là thước đo chính, số restart được ghi lại.
+- Generator đếm điểm trực tiếp nên giới hạn ở 28 bit; chưa dùng đường cong chuẩn có bậc biết trước.
+
+Câu hỏi cần thành viên thuật toán rà soát:
+
+1. Giữ brute force làm baseline phần cứng và dùng rho làm baseline thuật toán? Đề xuất: có.
+2. Có cần mở rộng ECDLP lên 32–40 bit bằng đường cong có bậc biết trước? Đề xuất: chỉ làm khi có nguồn đường cong tin cậy; generator hiện tại không đáp ứng.
+3. Có cần benchmark GPU rho? Đề xuất: không trong scope này; lý do ở 4.2.5.
+4. Có cần đo rho với 12 luồng? Đề xuất: không; parallel rho cần distinguished points và phát hiện collision, khác mô hình hiện tại.
+5. Có cần GNFS/QS cho RSA toy? Đề xuất: không; với 32–56 bit, rho/Brent phù hợp hơn và GNFS nằm ngoài scope.
+
+## 4.2.7 Kết luận của mục
+
+Trong phạm vi tham số toy, thời gian khôi phục tăng nhanh khi tăng kích thước khóa. RSA toy tăng gần theo $2^{b/2}$; ECDLP toy tăng gần theo bậc của nhóm con. Song song hóa bằng 12 luồng cho mức tăng tốc khoảng 4.88–5.82 lần ở các kích thước đủ lớn, phù hợp với 6 lõi vật lý của máy. GPU CubeCL nhanh hơn CPU brute force cho RSA (3.69–9.13 lần full; 3.00–7.63 lần recovery) và ECDLP 18 bit (4.68 lần full; 3.18 lần recovery), nhưng chậm hơn cho ECDLP 22–26 bit do mỗi thread GPU thực hiện nhân vô hướng đầy đủ, trong khi CPU chỉ cộng điểm mỗi ứng viên. Pollard rho CPU giảm số bước 27.5–2505 lần và nhanh hơn brute force 1 luồng 9.05–448.81 lần; so với GPU brute-force recovery, rho CPU còn nhanh hơn 10.1 lần ở RSA 56 bit và 66.5 lần ở ECDLP 26 bit. Vì vậy GPU brute force không đại diện cho chi phí tấn công tốt nhất. Các kết quả này cho thấy lựa chọn thuật toán quan trọng hơn nền tảng; chúng không chứng minh khả năng phá khóa chuẩn và không thay thế phân tích GNFS, đánh giá Pollard’s rho ở tham số chuẩn hay tấn công nonce/lỗi triển khai.
 
 ## Tài liệu tham khảo của mục
 

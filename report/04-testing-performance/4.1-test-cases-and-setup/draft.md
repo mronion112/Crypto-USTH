@@ -38,7 +38,7 @@ Các test case được chia thành bốn nhóm:
 |---|---|---|
 | Correctness | Kiểm tra tạo khóa, ký và xác minh của từng họ thuật toán | C1–C8 |
 | Implementation risk | Minh họa khôi phục khóa do tái sử dụng nonce, không dùng tìm kiếm vét cạn | I1 |
-| Key recovery | Đo thời gian và tốc độ khôi phục khóa toy | K1–K2 |
+| Key recovery | Đo thời gian và tốc độ khôi phục khóa toy | K1–K3 |
 | Scaling và nền tảng | So sánh 1 luồng với 12 luồng; chuẩn bị phép đo GPU | S1, G1 |
 
 Bảng đầy đủ về dữ liệu vào, kết quả mong đợi và kết quả thực tế nằm trong `test-cases.md`. Các test case correctness dùng thư viện chuẩn, không đo hiệu năng và không dùng để so sánh thuật toán. Các test case key recovery dùng tham số đồ chơi và chỉ đo chi phí tìm kiếm.
@@ -80,10 +80,11 @@ Các smoke test C1–C8 sinh khóa ngắn hạn trong bộ nhớ, ký một thô
 ### Đồng hồ và số lần chạy
 
 - CPU: đo bằng `std::time::Instant` bao quanh toàn bộ tìm kiếm. Binary được build bằng profile release của Cargo: `opt-level = 3`, `lto = "thin"`, `codegen-units = 1`.
-- GPU: đo wall time bằng `std::time::Instant` và thời gian kernel bằng CUDA event.
+- GPU: đo wall time bằng `std::time::Instant`; CubeCL không tách riêng thời gian kernel.
 - Mỗi cấu hình có một lần chạy warm-up không ghi nhận, sau đó 10 lần đo.
 - CPU và GPU được đo trên nguồn AC để giảm biến thiên tần số do chính sách năng lượng.
 - Báo cáo trung vị, khoảng tứ phân vị (IQR), nhỏ nhất, lớn nhất và trung bình. Không loại bỏ ngoại lai.
+- Kết quả chỉ được dùng khi trường `verified` bằng 1; warm-up sai hoặc GPU không truy cập được làm script dừng, và trường hợp GPU trả mã 2 sẽ giữ dữ liệu GPU cũ.
 - CPU được đo với 1 luồng và 12 luồng. GPU dùng block 256 luồng.
 
 ### Hai chế độ đo
@@ -95,7 +96,7 @@ Tốc độ được tính bằng số ứng viên chia cho thời gian. Với c
 
 ### Tương đương CPU/GPU
 
-Hai phiên bản dùng cùng không gian tìm kiếm, cùng thứ tự ứng viên và cùng tiêu chí xác nhận. Cách cài đặt khác nhau: CPU duyệt tuần tự theo khối và cập nhật điểm bằng phép cộng điểm; GPU dùng một thread cho mỗi ứng viên hoặc mỗi phép nhân vô hướng. Vì vậy phép so sánh CPU/GPU chỉ hợp lệ khi cả hai cùng kích thước toy và cùng chế độ đo; thời gian kernel và thời gian end-to-end được báo riêng.
+Hai phiên bản dùng cùng không gian tìm kiếm, cùng thứ tự ứng viên và cùng tiêu chí xác nhận. Cách cài đặt khác nhau: CPU duyệt tuần tự theo khối và cập nhật điểm bằng phép cộng điểm; GPU dùng một thread cho mỗi ứng viên hoặc mỗi phép nhân vô hướng. Vì vậy phép so sánh CPU/GPU chỉ hợp lệ khi cả hai cùng kích thước toy và cùng chế độ đo; CubeCL chỉ báo thời gian end-to-end (wall time), không tách thời gian kernel.
 
 ## 4.1.6 Tái lập
 
