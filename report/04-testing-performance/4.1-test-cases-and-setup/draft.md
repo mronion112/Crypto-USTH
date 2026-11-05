@@ -43,7 +43,7 @@ Các test case được chia thành bốn nhóm:
 
 Bảng đầy đủ về dữ liệu vào, kết quả mong đợi và kết quả thực tế nằm trong `test-cases.md`. Các test case correctness dùng thư viện chuẩn, không đo hiệu năng và không dùng để so sánh thuật toán. Các test case key recovery dùng tham số đồ chơi và chỉ đo chi phí tìm kiếm.
 
-C1–C2 tuân theo cấu hình RSA-PSS trong FIPS 186-5 [1]; C4 dùng Ed25519 theo RFC 8032 [2]; C5 dùng SM2 theo GB/T 32918.2-2016 [3]; C6–C8 dùng ML-DSA theo FIPS 204 [4]. Phần SM2 chạy qua OpenSSL CLI [5]; các họ còn lại dùng thư viện `cryptography` [6].
+C1–C2 tuân theo cấu hình RSA-PSS trong FIPS 186-5 [[1]](../4.2-cpu-gpu-key-recovery/references.md#ref-1); C4 dùng Ed25519 theo RFC 8032 [[2]](../4.2-cpu-gpu-key-recovery/references.md#ref-2); C5 dùng SM2 theo GB/T 32918.2-2016 [[3]](../4.2-cpu-gpu-key-recovery/references.md#ref-3); C6–C8 dùng ML-DSA theo FIPS 204 [[4]](../4.2-cpu-gpu-key-recovery/references.md#ref-4). Phần SM2 chạy qua OpenSSL CLI [[5]](../4.2-cpu-gpu-key-recovery/references.md#ref-5); các họ còn lại dùng thư viện `cryptography` [[6]](../4.2-cpu-gpu-key-recovery/references.md#ref-6).
 
 ## 4.1.4 Tham số đồ chơi và sinh dữ liệu
 
@@ -71,7 +71,7 @@ Các đường cong này là đường cong thường (ordinary) nhưng rất nh
 
 ### Nonce reuse và smoke test
 
-Test case I1 dùng đường cong P-256 chuẩn, sinh một khóa thử nghiệm và hai chữ ký có cùng nonce. Khóa được khôi phục bằng đại số từ hai phương trình chữ ký; không có bước tìm kiếm khóa. Kết quả được xác nhận bằng `dG = Q` và bằng xác minh chữ ký độc lập qua thư viện `cryptography`. Rủi ro tái sử dụng nonce và yêu cầu sinh nonce duy nhất được quy định trong FIPS 186-5 [1] và RFC 6979 [7].
+Test case I1 dùng đường cong P-256 chuẩn, sinh một khóa thử nghiệm và hai chữ ký có cùng nonce. Khóa được khôi phục bằng đại số từ hai phương trình chữ ký; không có bước tìm kiếm khóa. Kết quả được xác nhận bằng `dG = Q` và bằng xác minh chữ ký độc lập qua thư viện `cryptography`. Rủi ro tái sử dụng nonce và yêu cầu sinh nonce duy nhất được quy định trong FIPS 186-5 [[1]](../4.2-cpu-gpu-key-recovery/references.md#ref-1) và RFC 6979 [[7]](../4.2-cpu-gpu-key-recovery/references.md#ref-7).
 
 Các smoke test C1–C8 sinh khóa ngắn hạn trong bộ nhớ, ký một thông điệp cố định và xác minh ngay. Không có khóa riêng nào được ghi vào kho dữ liệu.
 
@@ -125,4 +125,4 @@ python3 bench/scripts/nonce_reuse.py
 - Chưa tối ưu block size, số block hay cách ánh xạ ứng viên cho GPU; kết quả chỉ ứng với block 256.
 - Kết quả correctness C1–C8 chỉ xác nhận thư viện hoạt động đúng, không phải benchmark hiệu năng.
 
-Các nguồn [1]–[7] được liệt kê trong `../4.2-cpu-gpu-key-recovery/references.md`.
+Các nguồn [1]–[7] được liệt kê trong [`references.md`](../4.2-cpu-gpu-key-recovery/references.md).

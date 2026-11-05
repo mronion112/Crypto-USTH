@@ -4,7 +4,7 @@
 
 ### RSA toy
 
-Với modulus `n = p * q`, benchmark tìm một ước không tầm thường bằng cách thử các ứng viên `6k - 1` và `6k + 1` từ nhỏ đến `floor(sqrt(n))`. Đây là brute force có lọc theo lớp đồng dư, không phải GNFS [12]. Không gian tìm kiếm là số ứng viên trong khoảng đã nêu; mỗi ứng viên được kiểm tra bằng `n % d == 0`.
+Với modulus `n = p * q`, benchmark tìm một ước không tầm thường bằng cách thử các ứng viên `6k - 1` và `6k + 1` từ nhỏ đến `floor(sqrt(n))`. Đây là brute force có lọc theo lớp đồng dư, không phải GNFS [[12]](references.md#ref-12). Không gian tìm kiếm là số ứng viên trong khoảng đã nêu; mỗi ứng viên được kiểm tra bằng `n % d == 0`.
 
 Nghiệm được xác nhận khi `p * q = n` và cả hai thừa số là số nguyên tố theo Miller-Rabin xác định. Benchmark chỉ chạy trên modulus 32, 40, 48 và 56 bit.
 
@@ -37,19 +37,19 @@ CPU dùng 1 và 12 luồng. GPU dùng block 256. Mỗi cấu hình có một l�
 
 | Bits | Không gian khóa | 1 luồng, trung vị (ms) | IQR (ms) | 12 luồng, trung vị (ms) | IQR (ms) | Tăng tốc | 1 luồng (triệu ứng viên/s) | 12 luồng (triệu ứng viên/s) |
 |---|---|---|---|---|---|---|---|---|
-| 32 | 16940 | 0.126 | 0.020 | 0.278 | 0.025 | 0.45 | 134.76 | 61.98 |
-| 40 | 248744 | 0.482 | 0.167 | 0.305 | 0.081 | 1.58 | 523.79 | 820.99 |
-| 48 | 4145928 | 7.059 | 0.432 | 1.399 | 0.020 | 5.05 | 589.39 | 2970.06 |
-| 56 | 71706536 | 115.379 | 0.613 | 19.927 | 0.130 | 5.79 | 621.53 | 3601.08 |
+| 32 | 16940 | 0.128 | 0.036 | 0.256 | 0.056 | 0.50 | 134.98 | 66.86 |
+| 40 | 248744 | 0.472 | 0.173 | 0.307 | 0.107 | 1.54 | 527.78 | 835.05 |
+| 48 | 4145928 | 6.792 | 0.288 | 1.393 | 0.017 | 4.88 | 618.06 | 2980.14 |
+| 56 | 71706536 | 114.890 | 1.392 | 19.816 | 0.102 | 5.80 | 625.81 | 3618.70 |
 
 **Bảng 4.4. RSA toy - thời gian khôi phục**
 
 | Bits | Không gian khóa (xấp xỉ) | 1 luồng, trung vị (ms) | IQR (ms) | 12 luồng, trung vị (ms) | IQR (ms) | Tăng tốc |
 |---|---|---|---|---|---|---|
-| 32 | 16940 | 0.112 | 0.012 | 0.254 | 0.031 | 0.44 |
-| 40 | 248744 | 0.656 | 0.102 | 0.286 | 0.012 | 2.29 |
-| 48 | 4145928 | 6.843 | 0.719 | 1.225 | 0.055 | 5.59 |
-| 56 | 71706536 | 102.098 | 20.542 | 17.667 | 3.368 | 5.78 |
+| 32 | 16940 | 0.111 | 0.029 | 0.260 | 0.064 | 0.43 |
+| 40 | 248744 | 0.624 | 0.136 | 0.277 | 0.033 | 2.25 |
+| 48 | 4145928 | 6.745 | 0.452 | 1.237 | 0.126 | 5.45 |
+| 56 | 71706536 | 101.680 | 20.051 | 17.457 | 3.431 | 5.82 |
 
 ![Hình 4.1. Thời gian khôi phục RSA toy theo kích thước bit](figures/fig_rsa_recovery_time.png)
 
@@ -59,11 +59,11 @@ CPU dùng 1 và 12 luồng. GPU dùng block 256. Mỗi cấu hình có một l�
 
 *Hình 4.2. Tốc độ xử lý ứng viên của RSA toy trong chế độ quét toàn bộ; trục tung dùng thang log.*
 
-Ở chế độ quét toàn bộ, không gian khóa tăng khoảng 2^4 lần khi thêm 4 bit modulus. Thời gian tăng gần tương ứng ở các kích thước lớn: từ 48 lên 56 bit, không gian tăng 17.3 lần và thời gian một luồng tăng 16.3 lần. Tốc độ một luồng đạt khoảng 589–622 triệu ứng viên/giây ở 48–56 bit; ở 32 bit, thời gian quá ngắn nên chi phí khởi động và đồng hồ làm tốc độ biểu kiến thấp hơn. Ở 40 bit, tốc độ một luồng đạt 523.79 triệu ứng viên/giây.
+Ở chế độ quét toàn bộ, không gian khóa tăng khoảng 2^4 lần khi thêm 4 bit modulus. Thời gian tăng gần tương ứng ở các kích thước lớn: từ 48 lên 56 bit, không gian tăng 17.3 lần và thời gian một luồng tăng 16.9 lần. Tốc độ một luồng đạt khoảng 618–626 triệu ứng viên/giây ở 48–56 bit; ở 32 bit, thời gian quá ngắn nên chi phí khởi động và đồng hồ làm tốc độ biểu kiến thấp hơn. Ở 40 bit, tốc độ một luồng đạt 527.78 triệu ứng viên/giây.
 
-Với 12 luồng, tốc độ đạt khoảng 2.97–3.60 tỷ ứng viên/giây ở 48–56 bit, tương ứng tăng tốc 5.05–5.79 lần. Máy có 6 lõi vật lý và 12 luồng logic; phép chia 64-bit không hưởng nhiều từ siêu phân luồng, nên mức tăng tốc thấp hơn 12 lần là hợp lý. Ở 32 bit, 12 luồng còn chậm hơn 1 luồng do chi phí tạo luồng và đồng bộ lớn hơn thời gian tìm kiếm.
+Với 12 luồng, tốc độ đạt khoảng 2.98–3.62 tỷ ứng viên/giây ở 48–56 bit, tương ứng tăng tốc 4.88–5.80 lần. Máy có 6 lõi vật lý và 12 luồng logic; phép chia 64-bit không hưởng nhiều từ siêu phân luồng, nên mức tăng tốc thấp hơn 12 lần là hợp lý. Ở 32 bit, 12 luồng còn chậm hơn 1 luồng do chi phí tạo luồng và đồng bộ lớn hơn thời gian tìm kiếm.
 
-Trong chế độ khôi phục, thời gian phụ thuộc vị trí của thừa số nhỏ trong miền tìm kiếm. Vì vậy IQR lớn hơn nhiều so với chế độ quét toàn bộ, đặc biệt ở 56 bit (20.5 ms). Tỷ số tăng tốc ở 48–56 bit là 5.59–5.78 lần; các giá trị ở kích thước nhỏ bị chi phối bởi chi phí khởi động và vị trí khóa.
+Trong chế độ khôi phục, thời gian phụ thuộc vị trí của thừa số nhỏ trong miền tìm kiếm. Vì vậy IQR lớn hơn nhiều so với chế độ quét toàn bộ, đặc biệt ở 56 bit (20.1 ms). Tỷ số tăng tốc ở 48–56 bit là 5.45–5.82 lần; các giá trị ở kích thước nhỏ bị chi phối bởi chi phí khởi động và vị trí khóa.
 
 ### ECDLP toy
 
@@ -71,17 +71,17 @@ Trong chế độ khôi phục, thời gian phụ thuộc vị trí của thừa
 
 | `p` bits | Không gian khóa | 1 luồng, trung vị (ms) | IQR (ms) | 12 luồng, trung vị (ms) | IQR (ms) | Tăng tốc | 1 luồng (triệu ứng viên/s) | 12 luồng (triệu ứng viên/s) |
 |---|---|---|---|---|---|---|---|---|
-| 18 | 81736 | 4.211 | 0.298 | 3.586 | 0.272 | 1.17 | 19.46 | 23.03 |
-| 22 | 2609700 | 73.986 | 0.702 | 12.959 | 0.631 | 5.71 | 35.34 | 201.69 |
-| 26 | 54518392 | 1450.927 | 3.171 | 249.728 | 0.327 | 5.81 | 37.58 | 218.33 |
+| 18 | 81736 | 4.201 | 0.386 | 3.402 | 0.373 | 1.24 | 19.46 | 24.43 |
+| 22 | 2609700 | 73.075 | 0.632 | 12.810 | 0.136 | 5.71 | 35.72 | 204.23 |
+| 26 | 54518392 | 1445.353 | 4.276 | 248.731 | 0.585 | 5.81 | 37.72 | 219.26 |
 
 **Bảng 4.6. ECDLP toy - thời gian khôi phục**
 
 | `p` bits | Không gian khóa | 1 luồng, trung vị (ms) | IQR (ms) | 12 luồng, trung vị (ms) | IQR (ms) | Tăng tốc |
 |---|---|---|---|---|---|---|
-| 18 | 81736 | 2.002 | 0.743 | 1.715 | 0.723 | 1.17 |
-| 22 | 2609700 | 34.666 | 24.694 | 6.242 | 4.145 | 5.55 |
-| 26 | 54518392 | 698.090 | 705.233 | 119.226 | 121.505 | 5.86 |
+| 18 | 81736 | 1.969 | 0.732 | 1.896 | 1.187 | 1.04 |
+| 22 | 2609700 | 34.373 | 24.719 | 6.244 | 3.341 | 5.51 |
+| 26 | 54518392 | 690.346 | 705.812 | 118.638 | 121.917 | 5.82 |
 
 ![Hình 4.3. Thời gian khôi phục ECDLP toy theo kích thước bit](figures/fig_ecc_recovery_time.png)
 
@@ -91,9 +91,9 @@ Trong chế độ khôi phục, thời gian phụ thuộc vị trí của thừa
 
 *Hình 4.4. Tốc độ xử lý ứng viên của ECDLP toy trong chế độ quét toàn bộ; trục tung dùng thang log.*
 
-Thời gian quét toàn bộ tăng theo bậc của nhóm con. Từ 18 lên 22 bit, không gian tăng 31.9 lần và thời gian một luồng tăng 17.6 lần; từ 22 lên 26 bit, không gian tăng 20.9 lần và thời gian tăng 19.6 lần. Tốc độ một luồng tăng từ 19.46 lên 37.58 triệu ứng viên/giây vì ở kích thước nhỏ, chi phí cố định của mỗi lần chạy chiếm tỷ trọng lớn.
+Thời gian quét toàn bộ tăng theo bậc của nhóm con. Từ 18 lên 22 bit, không gian tăng 31.9 lần và thời gian một luồng tăng 17.4 lần; từ 22 lên 26 bit, không gian tăng 20.9 lần và thời gian tăng 19.8 lần. Tốc độ một luồng tăng từ 19.46 lên 37.72 triệu ứng viên/giây vì ở kích thước nhỏ, chi phí cố định của mỗi lần chạy chiếm tỷ trọng lớn.
 
-Với 12 luồng, tốc độ đạt 201.69–218.33 triệu ứng viên/giây ở 22–26 bit. Mức tăng tốc 5.71–5.81 lần phù hợp với 6 lõi vật lý; ở 18 bit, thời gian quá ngắn nên tăng tốc chỉ 1.17 lần. Chế độ khôi phục có IQR lớn vì khóa mục tiêu nằm ở vị trí ngẫu nhiên; trung vị vẫn là thống kê phù hợp để so sánh, nhưng không nên dùng một lần chạy đơn lẻ.
+Với 12 luồng, tốc độ đạt 204.23–219.26 triệu ứng viên/giây ở 22–26 bit. Mức tăng tốc 5.71–5.81 lần phù hợp với 6 lõi vật lý; ở 18 bit, thời gian quá ngắn nên tăng tốc chỉ 1.24 lần. Chế độ khôi phục có IQR lớn vì khóa mục tiêu nằm ở vị trí ngẫu nhiên; trung vị vẫn là thống kê phù hợp để so sánh, nhưng không nên dùng một lần chạy đơn lẻ.
 
 ![Hình 4.5. Tăng tốc CPU 12 luồng so với 1 luồng](figures/fig_cpu_scaling.png)
 
@@ -101,36 +101,36 @@ Với 12 luồng, tốc độ đạt 201.69–218.33 triệu ứng viên/giây �
 
 ## 4.2.3 Kết quả GPU
 
-Mã GPU dùng CubeCL 0.11.3 [13]: kernel viết bằng Rust `#[cube]`, host Rust, chạy qua CUDA backend [9] với `cudarc` [10]. Mỗi thread xử lý một ứng viên RSA hoặc một phép nhân vô hướng ECDLP; kết quả được xác nhận lại trên CPU bằng cùng tiêu chí với bản CPU. Trước mỗi phép đo, binary chạy một warm-up launch không tính giờ để loại chi phí JIT khỏi kết quả. Bảng 4.7 dùng số liệu CubeCL.
+Mã GPU dùng CubeCL 0.11.3 [[13]](references.md#ref-13): kernel viết bằng Rust `#[cube]`, host Rust, chạy qua CUDA backend [[9]](references.md#ref-9) với `cudarc` [[10]](references.md#ref-10). Mỗi thread xử lý một ứng viên RSA hoặc một phép nhân vô hướng ECDLP; kết quả được xác nhận lại trên CPU bằng cùng tiêu chí với bản CPU. Trước mỗi phép đo, binary chạy một warm-up launch không tính giờ để loại chi phí JIT khỏi kết quả. Bảng 4.7 dùng số liệu CubeCL.
 
 **Bảng 4.7. CubeCL GPU - thời gian và tăng tốc so với CPU 12 luồng**
 
 | Case | Bits | Chế độ | GPU wall (ms) | CPU 12 luồng (ms) | GPU (triệu ứng viên/s) | Tăng tốc CPU/GPU |
 |---|---|---|---|---|---|---|
-| RSA | 32 | full | 0.086 | 0.278 | 196.86 | 3.23 |
-| RSA | 40 | full | 0.088 | 0.305 | 2833.01 | 3.45 |
-| RSA | 48 | full | 0.176 | 1.399 | 23614.10 | 7.96 |
-| RSA | 56 | full | 2.250 | 19.927 | 31892.45 | 8.86 |
-| RSA | 32 | recovery | 0.085 | 0.254 | - | 2.99 |
-| RSA | 40 | recovery | 0.086 | 0.286 | - | 3.34 |
-| RSA | 48 | recovery | 0.195 | 1.225 | - | 6.29 |
-| RSA | 56 | recovery | 2.157 | 17.667 | - | 8.19 |
-| ECDLP | 18 | full | 0.798 | 3.586 | 102.50 | 4.50 |
-| ECDLP | 22 | full | 30.158 | 12.959 | 86.92 | 0.43 |
-| ECDLP | 26 | full | 531.070 | 249.728 | 102.67 | 0.47 |
-| ECDLP | 18 | recovery | 0.600 | 1.715 | - | 2.86 |
-| ECDLP | 22 | recovery | 11.117 | 6.242 | - | 0.56 |
-| ECDLP | 26 | recovery | 245.966 | 119.226 | - | 0.48 |
+| RSA | 32 | full | 0.069 | 0.256 | 308.20 | 3.69 |
+| RSA | 40 | full | 0.081 | 0.307 | 3152.21 | 3.80 |
+| RSA | 48 | full | 0.181 | 1.393 | 23302.33 | 7.70 |
+| RSA | 56 | full | 2.171 | 19.816 | 33200.67 | 9.13 |
+| RSA | 32 | recovery | 0.087 | 0.260 | - | 3.00 |
+| RSA | 40 | recovery | 0.084 | 0.277 | - | 3.30 |
+| RSA | 48 | recovery | 0.181 | 1.237 | - | 6.82 |
+| RSA | 56 | recovery | 2.288 | 17.457 | - | 7.63 |
+| ECDLP | 18 | full | 0.727 | 3.402 | 112.77 | 4.68 |
+| ECDLP | 22 | full | 28.000 | 12.810 | 93.33 | 0.46 |
+| ECDLP | 26 | full | 530.816 | 248.731 | 102.71 | 0.47 |
+| ECDLP | 18 | recovery | 0.595 | 1.896 | - | 3.18 |
+| ECDLP | 22 | recovery | 13.602 | 6.244 | - | 0.46 |
+| ECDLP | 26 | recovery | 245.928 | 118.638 | - | 0.48 |
 
 ![Hình 4.6. Tăng tốc CPU 12 luồng so với GPU CubeCL](figures/fig_gpu_cubecl_speedup.png)
 
 *Hình 4.6. Tỷ số thời gian CPU 12 luồng / GPU CubeCL cho RSA và ECDLP toy; trục tung dùng thang log. Giá trị nhỏ hơn 1 cho thấy GPU chậm hơn CPU.*
 
-Với RSA, GPU nhanh hơn CPU ở mọi kích thước. Tăng tốc tăng từ 3.23 lần ở 32 bit lên 8.86 lần ở 56 bit trong chế độ quét toàn bộ; chế độ recovery cho 2.99–8.19 lần. Tốc độ GPU đạt từ 196.86 triệu ứng viên/giây ở 32 bit lên 31.89 tỷ ứng viên/giây ở 56 bit. Ở 32 bit, wall time 0.086 ms; phần lớn thời gian là phát động kernel và đọc kết quả, nhưng warm-up đã loại chi phí biên dịch JIT.
+Với RSA, GPU nhanh hơn CPU ở mọi kích thước. Tăng tốc tăng từ 3.69 lần ở 32 bit lên 9.13 lần ở 56 bit trong chế độ quét toàn bộ; chế độ recovery cho 3.00–7.63 lần. Tốc độ GPU đạt từ 308.20 triệu ứng viên/giây ở 32 bit lên 33.20 tỷ ứng viên/giây ở 56 bit. Ở 32 bit, wall time 0.069 ms; phần lớn thời gian là phát động kernel và đọc kết quả, nhưng warm-up đã loại chi phí biên dịch JIT.
 
-Với ECDLP, kết quả phụ thuộc mạnh vào cách cài đặt. GPU nhanh hơn CPU ở 18 bit (4.50 lần full, 2.86 lần recovery) nhưng chậm hơn ở 22 và 26 bit (0.43–0.47 lần full và 0.48–0.56 lần recovery). Nguyên nhân là GPU dùng một thread cho mỗi phép nhân vô hướng đầy đủ, còn CPU chỉ cộng thêm một điểm cho mỗi ứng viên kế tiếp. Ở 18 bit, chi phí cố định của CPU chiếm tỷ trọng lớn nên GPU có lợi; từ 22 bit, vòng lặp tăng dần của CPU hiệu quả hơn. Tốc độ GPU đạt 102.50, 86.92 và 102.67 triệu ứng viên/giây ở 18, 22 và 26 bit; CPU 12 luồng đạt 23.03, 201.69 và 218.33 triệu ứng viên/giây.
+Với ECDLP, kết quả phụ thuộc mạnh vào cách cài đặt. GPU nhanh hơn CPU ở 18 bit (4.68 lần full, 3.18 lần recovery) nhưng chậm hơn ở 22 và 26 bit (0.46–0.47 lần full và 0.46–0.48 lần recovery). Nguyên nhân là GPU dùng một thread cho mỗi phép nhân vô hướng đầy đủ, còn CPU chỉ cộng thêm một điểm cho mỗi ứng viên kế tiếp. Ở 18 bit, chi phí cố định của CPU chiếm tỷ trọng lớn nên GPU có lợi; từ 22 bit, vòng lặp tăng dần của CPU hiệu quả hơn. Tốc độ GPU đạt 112.77, 93.33 và 102.71 triệu ứng viên/giây ở 18, 22 và 26 bit; CPU 12 luồng đạt 24.43, 204.23 và 219.26 triệu ứng viên/giây.
 
-Độ phân tán của chế độ recovery phản ánh vị trí khóa mục tiêu. RSA recovery có IQR nhỏ (0.003–0.464 ms); ECDLP 26 bit có IQR 261.71 ms vì khóa mục tiêu nằm ở vị trí ngẫu nhiên trong không gian 54.5 triệu khóa.
+Độ phân tán của chế độ recovery phản ánh vị trí khóa mục tiêu. RSA recovery có IQR nhỏ (0.006–0.456 ms); ECDLP 26 bit có IQR 259.51 ms vì khóa mục tiêu nằm ở vị trí ngẫu nhiên trong không gian 54.5 triệu khóa.
 
 CubeCL không tách riêng thời gian kernel trong host path này; cột GPU wall là thời gian end-to-end sau warm-up. Phép so sánh CPU/GPU là so sánh giữa hai cách cài đặt khác nhau, không chỉ khác phần cứng. CPU chịu chi phí tạo luồng; GPU chịu chi phí phát động kernel và trao đổi bộ nhớ. Vì vậy các tỷ số trong Bảng 4.7 chỉ có ý nghĩa cho đúng bài toán toy, đúng kích thước và đúng cài đặt đã đo.
 
@@ -138,7 +138,7 @@ CubeCL không tách riêng thời gian kernel trong host path này; cột GPU wa
 
 ### Brute force toy không phải tấn công tốt nhất
 
-Với RSA, phép thử trong mục này có chi phí xấp xỉ `sqrt(n) = 2^(b/2)` ứng viên. GNFS có độ phức tạp dưới mũ và là hướng tấn công thực tế quan trọng hơn nhiều đối với modulus lớn [8], [12]. Với ECDLP, brute force có chi phí `O(q)`; Pollard’s rho có chi phí kỳ vọng `O(sqrt(q))` [8], [11]. Vì vậy số đo toy không mô tả chi phí tấn công tốt nhất và không được dùng để suy ra thời gian phá khóa chuẩn.
+Với RSA, phép thử trong mục này có chi phí xấp xỉ `sqrt(n) = 2^(b/2)` ứng viên. GNFS có độ phức tạp dưới mũ và là hướng tấn công thực tế quan trọng hơn nhiều đối với modulus lớn [[8]](references.md#ref-8), [[12]](references.md#ref-12). Với ECDLP, brute force có chi phí `O(q)`; Pollard’s rho có chi phí kỳ vọng `O(sqrt(q))` [[8]](references.md#ref-8), [[11]](references.md#ref-11). Vì vậy số đo toy không mô tả chi phí tấn công tốt nhất và không được dùng để suy ra thời gian phá khóa chuẩn.
 
 ### Giới hạn của phép đo
 
@@ -152,8 +152,8 @@ Với RSA, phép thử trong mục này có chi phí xấp xỉ `sqrt(n) = 2^(b/
 
 ## 4.2.5 Kết luận của mục
 
-Trong phạm vi tham số toy, thời gian khôi phục tăng nhanh khi tăng kích thước khóa. RSA toy tăng gần theo `2^(b/2)`; ECDLP toy tăng gần theo bậc của nhóm con. Song song hóa bằng 12 luồng cho mức tăng tốc khoảng 5.05–5.81 lần ở các kích thước đủ lớn, phù hợp với 6 lõi vật lý của máy. GPU CubeCL nhanh hơn CPU cho RSA (3.23–8.86 lần full; 2.99–8.19 lần recovery) và ECDLP 18 bit (4.50 lần full; 2.86 lần recovery), nhưng chậm hơn cho ECDLP 22–26 bit do mỗi thread GPU thực hiện nhân vô hướng đầy đủ, trong khi CPU chỉ cộng điểm mỗi ứng viên. Các kết quả này minh họa chi phí tìm kiếm vét cạn và cho thấy lợi thế GPU phụ thuộc bài toán lẫn cách cài đặt; chúng không chứng minh khả năng phá khóa chuẩn và không thay thế phân tích GNFS, Pollard’s rho hay tấn công nonce.
+Trong phạm vi tham số toy, thời gian khôi phục tăng nhanh khi tăng kích thước khóa. RSA toy tăng gần theo `2^(b/2)`; ECDLP toy tăng gần theo bậc của nhóm con. Song song hóa bằng 12 luồng cho mức tăng tốc khoảng 4.88–5.82 lần ở các kích thước đủ lớn, phù hợp với 6 lõi vật lý của máy. GPU CubeCL nhanh hơn CPU cho RSA (3.69–9.13 lần full; 3.00–7.63 lần recovery) và ECDLP 18 bit (4.68 lần full; 3.18 lần recovery), nhưng chậm hơn cho ECDLP 22–26 bit do mỗi thread GPU thực hiện nhân vô hướng đầy đủ, trong khi CPU chỉ cộng điểm mỗi ứng viên. Các kết quả này minh họa chi phí tìm kiếm vét cạn và cho thấy lợi thế GPU phụ thuộc bài toán lẫn cách cài đặt; chúng không chứng minh khả năng phá khóa chuẩn và không thay thế phân tích GNFS, Pollard’s rho hay tấn công nonce.
 
 ## Tài liệu tham khảo của mục
 
-Các trích dẫn `[1]`–`[13]` được liệt kê trong `references.md` của thư mục này.
+Các trích dẫn [1]–[13] được liệt kê trong [`references.md`](references.md).
