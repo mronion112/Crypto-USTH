@@ -1,0 +1,15 @@
+timestamp_utc: 2026-11-05T05:29:41Z
+os: CachyOS
+kernel: Linux 7.3.1-1-cachyos x86_64
+cpu_model: AMD Ryzen 5 7535HS with Radeon Graphics
+cpu_logical_cores: 12
+memory_total: 14Gi
+rustc: rustc 1.99.1 (58cf8f9c3 2026-10-13) (Arch Linux rust 1:1.99.1-1)
+cargo: cargo 1.99.1 (5f94df478 2026-08-27) (Arch Linux rust 1:1.99.1-1)
+python: Python 3.14.9
+cryptography: 50.0.2
+openssl: OpenSSL 3.6.5 29 Sep 2026 (Library: OpenSSL 3.6.5 29 Sep 2026)
+cuda_compiler: Cuda compilation tools, release 13.4, V13.4.92
+gpu_lspci: 01:00.0 VGA compatible controller [0300]: NVIDIA Corporation AD107M [GeForce RTX 4050 Max-Q / Mobile] [10de:28e1] (rev a1)
+36:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Rembrandt [Radeon 680M] [1002:1681] (rev 0b)
+gpu_nvidia_smi: NVIDIA GeForce RTX 4050 Laptop GPU, 6141 MiB, 615.78.08, 8.9

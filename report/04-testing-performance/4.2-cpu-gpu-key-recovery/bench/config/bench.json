@@ -1,0 +1,9 @@
+{
+  "seed": 20261105,
+  "runs": 10,
+  "warmup": 1,
+  "threads": [1, 12],
+  "rsa_bits": [32, 40, 48, 56],
+  "ecc_bits": [18, 22, 26],
+  "gpu_block_size": 256
+}

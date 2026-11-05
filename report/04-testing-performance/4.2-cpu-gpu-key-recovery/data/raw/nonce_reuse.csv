@@ -1,0 +1,2 @@
+case,recovered,verified,signature_verified_1,signature_verified_2,note
+ecdsa_p256_nonce_reuse,1,1,1,1,algebraic recovery from reused nonce; no key search

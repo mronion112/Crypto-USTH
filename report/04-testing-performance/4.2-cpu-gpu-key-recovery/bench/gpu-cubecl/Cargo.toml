@@ -1,0 +1,14 @@
+[package]
+name = "gpu-cubecl"
+version = "0.1.0"
+edition = "2024"
+description = "CubeCL CUDA smoke test for the toy key-recovery benchmark"
+
+[dependencies]
+cubecl = { version = "0.11", features = ["cuda", "cpu"] }
+toy-key-recovery = { path = ".." }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
