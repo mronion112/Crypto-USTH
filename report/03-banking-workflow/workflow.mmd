@@ -1,0 +1,124 @@
+flowchart TD
+    %% =========================================================================
+    %% END-TO-END CRYPTOGRAPHIC BANKING TRANSACTION WORKFLOW
+    %% Designed by Nguyen Van Duc (Task 3: Banking Workflow)
+    %% =========================================================================
+
+    classDef clientStyle fill:#e1f5fe,stroke:#0288d1,stroke-width:1.5px,color:#01579b;
+    classDef origStyle fill:#ede7f6,stroke:#5e35b1,stroke-width:1.5px,color:#311b92;
+    classDef hsmStyle fill:#fff8e1,stroke:#f57f17,stroke-width:2px,color:#b78103;
+    classDef railStyle fill:#eceff1,stroke:#455a64,stroke-width:1.5px,color:#263238;
+    classDef recvStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:1.5px,color:#4a148c;
+    classDef decisionStyle fill:#fffde7,stroke:#fbc02d,stroke-width:1.5px,color:#f57f17;
+    classDef successStyle fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20;
+    classDef rejectStyle fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#b71c1c;
+    classDef auditStyle fill:#e0f2f1,stroke:#00695c,stroke-width:1.5px,color:#004d40;
+
+    %% -------------------------------------------------------------------------
+    %% ZONE 1: CLIENT DOMAIN
+    %% -------------------------------------------------------------------------
+    subgraph ClientZone ["1. Client Domain (Initiator / Corporate ERP / Mobile Client)"]
+        A1["User Authentication & Intent<br/>(FIDO2 / MFA / Session Token)"]:::clientStyle
+        A2["Construct Raw Transaction<br/>{AccountSrc, AccountDst, Amount, Cur, Nonce, Time}"]:::clientStyle
+        A1 --> A2
+    end
+
+    %% -------------------------------------------------------------------------
+    %% ZONE 2: ORIGINATING BANK PLATFORM & HSM
+    %% -------------------------------------------------------------------------
+    subgraph OrigBankZone ["2. Originating Bank Boundary (Sender Financial Institution)"]
+        B1["Ingress Gateway & Session Validation<br/>(OAuth2 Bearer Token / Role Verification)"]:::origStyle
+        B2["Canonicalization Engine<br/>RFC 8785 JCS / XML C14N<br/>m_canon = Canonicalize(Payload)"]:::origStyle
+        B3["Digest Computation<br/>h = Hash(m_canon)"]:::origStyle
+        B4{"Policy & Limit Check<br/>Within Discretionary Limit?<br/>Four-Eyes Approval?"}:::decisionStyle
+        
+        subgraph HSMZone ["Hardware Security Module (FIPS 140-3 Level 3)"]
+            B5["PKCS#11 / REST KMS Request<br/>Unlock Private Key (SK_bank)"]:::hsmStyle
+            B6["Generate Digital Signature<br/>sigma = Sign(SK_bank, h)<br/>(RSA-PSS / Ed25519 / SM2 / ECDSA / ML-DSA)"]:::hsmStyle
+            B5 --> B6
+        end
+        
+        B7["Assemble Signed Envelope<br/>{Payload, sigma, Cert_Chain, Alg_ID, Nonce}"]:::origStyle
+        B8["Local Originator Logging<br/>(Pre-dispatch Audit Record)"]:::origStyle
+
+        A2 -->|"mTLS 1.3 Transmission"| B1
+        B1 --> B2
+        B2 --> B3
+        B3 --> B4
+        B4 -->|"Approved / Quorum Met"| B5
+        B6 --> B7
+        B7 --> B8
+    end
+
+    %% -------------------------------------------------------------------------
+    %% ZONE 3: INTERBANK NETWORK / CLEARING RAILS
+    %% -------------------------------------------------------------------------
+    subgraph InterbankRail ["3. Interbank Rail / Payment Switch (SWIFT / ISO 20022 Network / National Switch)"]
+        C1["Secure Channel Transport<br/>(Mutual TLS 1.3 with Certificate Pinning)"]:::railStyle
+        B8 -->|"Dispatch ISO 20022 pacs.008"| C1
+    end
+
+    %% -------------------------------------------------------------------------
+    %% ZONE 4: RECEIVING FINANCIAL INSTITUTION & SETTLEMENT
+    %% -------------------------------------------------------------------------
+    subgraph RecvBankZone ["4. Receiving Bank Boundary (Processor / Beneficiary)"]
+        D1["Perimeter Ingress Gateway<br/>Channel Authentication & Schema Validation"]:::recvStyle
+        C1 --> D1
+
+        %% Decision 1: Certificate & PKI
+        D2{"Step 1: PKI Validation<br/>Trust Chain to Root CA?<br/>NotBefore <= t <= NotAfter?<br/>KeyUsage = digitalSignature?<br/>OCSP / CRL Status = Valid?"}:::decisionStyle
+        D1 --> D2
+
+        %% Decision 2: Signature
+        D3["Payload Re-Canonicalization<br/>h_prime = Hash(Canonicalize(Payload))"]:::recvStyle
+        D4{"Step 2: Signature Verification<br/>Verify(PK_bank, h_prime, sigma) == True?"}:::decisionStyle
+        D2 -->|"Cert Valid"| D3
+        D3 --> D4
+
+        %% Decision 3: Anti-Replay & Timestamp
+        D5{"Step 3: Anti-Replay & Temporal Integrity<br/>|t_sys - t_tx| <= Delta_t ?<br/>Nonce unique in Redis Distributed Cache?"}:::decisionStyle
+        D4 -->|"Signature Valid"| D5
+
+        %% Decision 4: Business Rules & Fraud
+        D6{"Step 4: Business & AML Checks<br/>Beneficiary Account Active?<br/>Sanction Screening Clean?<br/>AML / Fraud Scoring Passed?"}:::decisionStyle
+        D5 -->|"Nonce Fresh & In Window"| D6
+
+        %% Branch A: Accept
+        subgraph CoreSettlement ["Core Banking Ledger & Final Settlement"]
+            E1["Execute Settlement & Balance Update<br/>Atomic Credit to Beneficiary Account"]:::successStyle
+            E2["Store Nonce with TTL<br/>(Cache Nonce in Dedup Store)"]:::successStyle
+            E3["Generate Signed Confirmation (pacs.002 ACK)<br/>sigma_ack = Sign(SK_recv, Receipt)"]:::successStyle
+            E1 --> E2
+            E2 --> E3
+        end
+
+        %% Branch B: Rejection Handler
+        subgraph RejectHandler ["Rejection & Incident Response Subsystem"]
+            R1["Generate Rejection Envelope (pacs.002 NACK)<br/>Specific ISO Error Code<br/>(CERT_REVOKED / SIGN_MISMATCH / REPLAY_DETECTED / AML_BLOCK)"]:::rejectStyle
+            R2["Security Alert Dispatch<br/>Trigger SOC / SIEM Incident if Tampering / Replay"]:::rejectStyle
+            R1 --> R2
+        end
+
+        D6 -->|"All Checks Pass"| E1
+        
+        %% Rejection Paths
+        B4 -->|"Rejected: Limit Exceeded"| R1
+        D2 -->|"Invalid / Expired / Revoked Cert"| R1
+        D4 -->|"Signature Verification Failed"| R1
+        D5 -->|"Replay Detected / Stale Time"| R1
+        D6 -->|"Account Frozen / Sanction Hit"| R1
+    end
+
+    %% -------------------------------------------------------------------------
+    %% ZONE 5: AUDIT & NON-REPUDIATION ARCHIVE
+    %% -------------------------------------------------------------------------
+    subgraph AuditLedger ["5. Immutable Audit Vault & Non-Repudiation Archive"]
+        F1["WORM Storage / Tamper-Evident Merkle Ledger<br/>Persist: {Raw Message, Canonical Hash, Signature,<br/>Cert Chain, Verification Proof, Timestamp, Status}"]:::auditStyle
+    end
+
+    E3 -->|"Commit Transaction Evidence"| F1
+    R2 -->|"Commit Forensic Rejection Audit"| F1
+
+    %% Responses back to Originator
+    E3 -.->|"Return Confirmation (ACK)"| A1
+    R1 -.->|"Return Rejection (NACK)"| A1
