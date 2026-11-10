@@ -4,7 +4,7 @@
 
 ### Scope and NIST FIPS 204 standardization
 
-Because Shor's algorithm [7] solves both integer factorization (RSA) and discrete logarithms over elliptic curves (ECDSA, Ed25519, SM2) in polynomial quantum time $\tilde{O}(k^3)$, all four classical signature schemes analysed in Sections 2.1–2.4 will become vulnerable once cryptographically relevant quantum computers (CRQCs) are built. In August 2024, NIST published **FIPS 204: Module-Lattice-Based Digital Signature Standard (ML-DSA)** [1], derived from CRYSTALS-Dilithium [2], as the primary standard for general-purpose post-quantum digital signatures, alongside **FIPS 205 (SLH-DSA)** [3] as a stateless hash-based backup.
+Because Shor's algorithm [7] solves both integer factorization (RSA) and discrete logarithms over elliptic curves (ECDSA, Ed25519, SM2) in polynomial quantum time, all four classical signature schemes analysed in Sections 2.1–2.4 would become vulnerable if cryptographically relevant fault-tolerant quantum computers are built. In August 2024, NIST published **FIPS 204: Module-Lattice-Based Digital Signature Standard (ML-DSA)** [1], derived from CRYSTALS-Dilithium [2], as the primary standard for general-purpose post-quantum digital signatures, alongside **FIPS 205 (SLH-DSA)** [3] as a stateless hash-based backup.
 
 FIPS 204 specifies three parameter sets—**ML-DSA-44**, **ML-DSA-65**, and **ML-DSA-87**—targeting NIST Security Categories 2, 3, and 5 respectively. This report analyses all three parameter sets (with correctness verified in Section 4.1 test cases C6, C7, and C8) and focuses on **ML-DSA-65** as the primary baseline for banking systems.
 
@@ -143,4 +143,4 @@ Because ML-DSA is evaluated as a **post-quantum replacement candidate** rather t
 6. G. Barthe, S. Belaïd, T. Espitau, P.-A. Fouque, B. Grégoire, M. Rossi, and M. Tibouchi, "Masking the GLP lattice-based signature scheme at any order," in *Advances in Cryptology — EUROCRYPT 2018*, Cham: Springer, 2018, pp. 354–384, doi: 10.1007/978-3-319-78375-8_12.
 7. P. W. Shor, "Algorithms for quantum computation: Discrete logarithms and factoring," in *Proc. 35th Annu. Symp. Foundations of Computer Science (FOCS)*, Santa Fe, NM, USA, Nov. 1994, pp. 124–134, doi: 10.1109/SFCS.1994.365700.
 8. L. K. Grover, "A fast quantum mechanical algorithm for database search," in *Proc. 28th Annu. ACM Symp. Theory of Computing (STOC '96)*, Philadelphia, PA, USA, 1996, pp. 212–219, doi: 10.1145/237814.237866.
-9. M. Ounsworth, J. Gray, M. Pala, J. Klaußner, and S. Fluhrer, "Composite ML-DSA for use in X.509 Public Key Infrastructure and CMS," Internet Engineering Task Force, Internet-Draft `draft-ietf-lamps-pq-composite-sigs`, 2024.
+9. M. Ounsworth, J. Gray, M. Pala, J. Klaußner, and S. Fluhrer, "Composite Module-Lattice-Based Digital Signature Algorithm (ML-DSA) for Use in X.509 Public Key Infrastructure," RFC 10073, Nov. 2026, doi: 10.17487/RFC10073.

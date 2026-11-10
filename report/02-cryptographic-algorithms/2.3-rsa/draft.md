@@ -104,7 +104,7 @@ A critical distinction must be drawn between three algorithmic regimes for facto
 
 1. **Trial division (exhaustive divisor search):** Tests candidate divisors $d \le \lfloor\sqrt{n}\rfloor$ (e.g., filtering by $6k \pm 1$ as in Section 4.2.1). Its complexity is exponential in the bit length $k$:
    $$T_{\text{trial}}(k) = O(\sqrt{n}) = O(2^{k/2}) \tag{2.3.9}$$
-2. **Pollard's rho / Brent cycle finding:** Uses a pseudorandom iteration $x_{i+1} = (x_i^2 + c) \bmod n$ and $\gcd(|x_i - x_j|, n)$ to find a factor $p$ in expected time $O(p^{1/2}) = O(n^{1/4})$ [15]:
+2. **Pollard's rho / Brent cycle finding:** Uses a pseudorandom iteration $x_{i+1} = (x_i^2 + c) \bmod n$ and $\gcd(|x_i - x_j|, n)$ to find a factor $p$ in expected time $O(p^{1/2}) = O(n^{1/4})$ [14]:
    $$T_{\rho}(k) = O(n^{1/4}) = O(2^{k/4}) \tag{2.3.10}$$
 3. **General Number Field Sieve (GNFS):** The asymptotically fastest known classical algorithm for factoring large balanced RSA moduli ($k \ge 400$ bits) [6]. GNFS operates in **sub-exponential** heuristic time:
    $$L_n\left[\frac{1}{3}, \left(\frac{64}{9}\right)^{1/3}\right] = \exp\left(\left(\left(\frac{64}{9}\right)^{1/3} + o(1)\right)(\ln n)^{1/3}(\ln \ln n)^{2/3}\right) \tag{2.3.11}$$
@@ -116,16 +116,16 @@ Historically, GNFS factored **RSA-768** in 2009 (~1,500 core-years) [7] and **RS
 
 #### 3. Padding, key-generation, and implementation vulnerabilities
 
-- **Deterministic PKCS #1 v1.5 flaws vs. RSA-PSS:** Legacy PKCS #1 v1.5 signature verification is vulnerable to Bleichenbacher's low-exponent ($e = 3$) cube-root forgery when ASN.1 parsers fail to enforce right-justification of the digest structure [9]. RSA-PSS mitigates this class of flaws by randomizing every signature with a salt and masking the entire data block via $\text{MGF1}$.
-- **Bellcore CRT fault injection:** If a hardware glitch (voltage spike or electromagnetic fault) corrupts only one branch of the CRT exponentiation in Eq. (2.3.7)—say $\tilde{s}_p \ne s_p$ while $s_q$ is intact—the faulty signature $\tilde{s}$ satisfies $\tilde{s}^e \equiv EM \pmod q$ but $\tilde{s}^e \not\equiv EM \pmod p$ [10]. A single GCD reveals the secret prime factor from one faulty signature:
+- **Strict encoding verification:** RSA signature security depends on applying the complete verification procedure for the selected encoding. RFC 8017 requires verifiers to reconstruct the expected encoded message and compare the complete result; accepting partial, malformed, or ambiguously parsed encodings is non-conforming [2]. RSA-PSS additionally randomizes the encoding with a salt and masks the data block with $\text{MGF1}$.
+- **Bellcore CRT fault injection:** If a hardware glitch (voltage spike or electromagnetic fault) corrupts only one branch of the CRT exponentiation in Eq. (2.3.7)—say $\tilde{s}_p \ne s_p$ while $s_q$ is intact—the faulty signature $\tilde{s}$ satisfies $\tilde{s}^e \equiv EM \pmod q$ but $\tilde{s}^e \not\equiv EM \pmod p$ [9]. A single GCD reveals the secret prime factor from one faulty signature:
   $$q = \gcd(\tilde{s}^e - EM \bmod n,\, n) \tag{2.3.12}$$
   Consequently, banking HSMs must verify $\tilde{s}^e \bmod n = EM$ internally before outputting any signature.
-- **Low-entropy prime generation:** When embedded devices generate RSA keys with insufficient entropy after boot, different moduli $n_1 = p q_1$ and $n_2 = p q_2$ may share a prime factor $p$, allowing instant recovery via $p = \gcd(n_1, n_2)$ in polynomial time [11].
+- **Low-entropy prime generation:** When embedded devices generate RSA keys with insufficient entropy after boot, different moduli $n_1 = p q_1$ and $n_2 = p q_2$ may share a prime factor $p$, allowing instant recovery via $p = \gcd(n_1, n_2)$ in polynomial time [10].
 - **Timing side channels:** Non-constant-time modular exponentiation leaks bits of $d_p, d_q$. Countermeasures include multiplicative RSA blinding ($EM' = EM \cdot r^e \bmod n$, followed by $s = (EM')^d \cdot r^{-1} \bmod n$) and constant-time Montgomery ladders.
 
 #### 4. Quantum threat (Shor's algorithm)
 
-On a fault-tolerant quantum computer, Shor's algorithm [12] reduces integer factorization to order-finding in $\mathbb{Z}_n^*$ using the Quantum Fourier Transform (QFT), running in polynomial time $\tilde{O}(k^3)$. Gidney and Ekerå [13] estimate that factoring RSA-2048 requires roughly $4096$ logical qubits (or ~20 million noisy physical qubits over 8 hours with surface codes). Detailed quantum resource comparisons across all studied schemes are given in **Section 4.3**.
+On a fault-tolerant quantum computer, Shor's algorithm [11] reduces integer factorization to order-finding in $\mathbb{Z}_n^*$ using the Quantum Fourier Transform (QFT), running in polynomial time $\tilde{O}(k^3)$. Under the architecture and error-correction assumptions in their resource estimate, Gidney and Ekerå [12] describe an eight-hour RSA-2048 factorization using approximately 20 million noisy qubits. Cross-algorithm resource comparisons and present-capability limits belong in **Section 4.3**.
 
 ---
 
@@ -157,8 +157,8 @@ In banking systems—where RSA-PSS serves as a primary classical baseline alongs
 2. **Interbank messaging and corporate treasury (ISO 20022 / EBICS):** Financial messaging standards such as ISO 20022 XML Digital Signatures (`rsa-sha256` / `sha256-rsa-MGF1`) and EBICS (Electronic Banking Internet Communication Standard, authentication version A006) mandate **RSA-PSS** with SHA-256 to sign payment batches and treasury instructions [14].
 3. **EMV chip card authentication (SDA / DDA / CDA):** In contact and contactless payment cards, POS terminals must verify the Issuer and IC Card certificates within strict millisecond windows (~100–300 ms). Because RSA verification with $e = 65537$ requires only 16 modular squarings and 1 multiplication, low-power POS terminals can verify RSA-2048 certificates rapidly.
 4. **Operational controls and HSM requirements:**
-   - **Strict PSS parameter enforcement:** Verifiers must reject legacy PKCS #1 v1.5 signatures on endpoints configured for RSA-PSS and explicitly pin the hash algorithm (SHA-256/384/512), MGF1 hash, and acceptable salt length ($sLen = hLen$) [2], [14].
-   - **HSM key protection and fault checking:** Private signing keys must be generated and retained inside FIPS 140-3 Level 3 HSMs, with mandatory post-CRT verification ($s^e \bmod n = EM$) enabled to prevent Bellcore fault attacks [10].
+   - **Strict PSS parameter enforcement:** Verifiers must reject legacy PKCS #1 v1.5 signatures on endpoints configured for RSA-PSS and explicitly pin the hash algorithm (SHA-256/384/512), MGF1 hash, and acceptable salt length ($sLen = hLen$) [2], [13].
+   - **HSM key protection and fault checking:** Private signing keys must be generated and retained inside FIPS 140-3 Level 3 HSMs, with mandatory post-CRT verification ($s^e \bmod n = EM$) enabled to prevent Bellcore fault attacks [9].
 
 ### Methodological note for Section 4 benchmarks
 
@@ -178,10 +178,9 @@ In **Section 4.1** (test cases C1 and C2), RSA-PSS correctness is validated at f
 6. A. K. Lenstra, H. W. Lenstra, Jr., M. S. Manasse, and J. M. Pollard, "The number field sieve," in *Proc. 22nd Annu. ACM Symp. Theory of Computing (STOC '90)*, 1990, pp. 564–572, doi: 10.1145/100216.100295.
 7. T. Kleinjung *et al.*, "Factorization of a 768-bit RSA modulus," in *Advances in Cryptology — CRYPTO 2010*, Berlin, Heidelberg: Springer, 2010, pp. 333–350, doi: 10.1007/978-3-642-14623-7_18.
 8. F. Boudot *et al.*, "Comparing the difficulty of factorization and discrete logarithm: A 240-digit experiment," in *Advances in Cryptology — CRYPTO 2020*, Cham: Springer, 2020, pp. 62–91, doi: 10.1007/978-3-030-56784-1_3.
-9. U. Kühn, "Side-channel attacks on textbook RSA and PKCS #1 v1.5," and D. Bleichenbacher, "Forging PKCS #1 v1.5 RSA signatures with $e=3$," *CRYPTO 2006 Rump Session*, 2006.
-10. D. Boneh, R. A. DeMillo, and R. J. Lipton, "On the importance of eliminating errors in cryptographic computations," *Journal of Cryptology*, vol. 14, no. 2, pp. 101–119, Mar. 2001, doi: 10.1007/s001450010016.
-11. N. Heninger, Z. Durumeric, E. Wustrow, and J. A. Halderman, "Mining your Ps and Qs: Detection of widespread weak keys in network devices," in *Proc. 21st USENIX Security Symp.*, Bellevue, WA, USA, 2012, pp. 205–220.
-12. P. W. Shor, "Algorithms for quantum computation: Discrete logarithms and factoring," in *Proc. 35th Annu. Symp. Foundations of Computer Science (FOCS)*, Santa Fe, NM, USA, Nov. 1994, pp. 124–134, doi: 10.1109/SFCS.1994.365700.
-13. C. Gidney and M. Ekerå, "How to factor 2048 bit RSA integers in 8 hours using 20 million noisy qubits," *Quantum*, vol. 5, p. 433, Apr. 2021, doi: 10.22331/q-2021-04-15-433.
-14. National Institute of Standards and Technology, *Transitioning the Use of Cryptographic Algorithms and Key Lengths*, NIST Special Publication 800-131A Rev. 2, Mar. 2019, doi: 10.6028/NIST.SP.800-131Ar2.
-15. R. P. Brent, "An improved Monte Carlo factorization algorithm," *BIT Numerical Mathematics*, vol. 20, no. 2, pp. 176–184, 1980, doi: 10.1007/BF01933190.
+9. D. Boneh, R. A. DeMillo, and R. J. Lipton, "On the importance of eliminating errors in cryptographic computations," *Journal of Cryptology*, vol. 14, no. 2, pp. 101–119, Mar. 2001, doi: 10.1007/s001450010016.
+10. N. Heninger, Z. Durumeric, E. Wustrow, and J. A. Halderman, "Mining your Ps and Qs: Detection of widespread weak keys in network devices," in *Proc. 21st USENIX Security Symp.*, Bellevue, WA, USA, 2012, pp. 205–220.
+11. P. W. Shor, "Algorithms for quantum computation: Discrete logarithms and factoring," in *Proc. 35th Annu. Symp. Foundations of Computer Science (FOCS)*, Santa Fe, NM, USA, Nov. 1994, pp. 124–134, doi: 10.1109/SFCS.1994.365700.
+12. C. Gidney and M. Ekerå, "How to factor 2048 bit RSA integers in 8 hours using 20 million noisy qubits," *Quantum*, vol. 5, p. 433, Apr. 2021, doi: 10.22331/q-2021-04-15-433.
+13. National Institute of Standards and Technology, *Transitioning the Use of Cryptographic Algorithms and Key Lengths*, NIST Special Publication 800-131A Rev. 2, Mar. 2019, doi: 10.6028/NIST.SP.800-131Ar2.
+14. R. P. Brent, "An improved Monte Carlo factorization algorithm," *BIT Numerical Mathematics*, vol. 20, no. 2, pp. 176–184, 1980, doi: 10.1007/BF01933190.

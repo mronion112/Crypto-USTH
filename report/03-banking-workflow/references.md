@@ -1,12 +1,12 @@
 # References for Section 3 (Banking Workflow)
 
-<a id="ref-b1" name="ref-b1"></a> [1] A. Rundgren, P. Jordan, and S. Erdtman, "JSON Canonicalization Scheme (JCS)," RFC 8785, June 2020. doi: 10.17487/RFC8785.
+<a id="ref-b1" name="ref-b1"></a> [1] A. Rundgren, B. Jordan, and S. Erdtman, "JSON Canonicalization Scheme (JCS)," RFC 8785, June 2020. doi: 10.17487/RFC8785.
 
 <a id="ref-b2" name="ref-b2"></a> [2] D. Cooper, S. Santesson, S. Farrell, S. Boeyen, R. Housley, and W. Polk, "Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile," RFC 5280, May 2008. doi: 10.17487/RFC5280.
 
 <a id="ref-b3" name="ref-b3"></a> [3] S. Santesson, M. Myers, R. Ankney, A. Malpani, S. Galperin, and C. Adams, "X.509 Internet Public Key Infrastructure Online Certificate Status Protocol - OCSP," RFC 6960, June 2013. doi: 10.17487/RFC6960.
 
-<a id="ref-b4" name="ref-b4"></a> [4] E. Rescorla, "The Transport Layer Security (TLS) Protocol Version 1.3," RFC 8446, Aug. 2018. doi: 10.17487/RFC8446.
+<a id="ref-b4" name="ref-b4"></a> [4] E. Rescorla, "The Transport Layer Security (TLS) Protocol Version 1.3," RFC 9846, July 2026. doi: 10.17487/RFC9846.
 
 <a id="ref-b5" name="ref-b5"></a> [5] S. Josefsson and I. Liusvaara, "Edwards-Curve Digital Signature Algorithm (EdDSA)," RFC 8032, Jan. 2017. doi: 10.17487/RFC8032.
 
@@ -24,7 +24,7 @@
 
 <a id="ref-b12" name="ref-b12"></a> [12] International Organization for Standardization, *Financial services — Universal financial industry message scheme*, ISO Standard 20022, 2022. [Online]. Available: https://www.iso20022.org/
 
-<a id="ref-b13" name="ref-b13"></a> [13] PCI Security Standards Council, *PCI PTS Hardware Security Module (HSM) Modular Security Requirements*, version 4.0, 2021.
+<a id="ref-b13" name="ref-b13"></a> [13] PCI Security Standards Council, *PCI PIN Transaction Security (PTS) Hardware Security Module (HSM) Modular Security Requirements*, version 5.0, May 2026. [Online]. Available: https://blog.pcisecuritystandards.org/pci-ssc-publishes-pci-pts-hsm-v5.0
 
 <a id="ref-b14" name="ref-b14"></a> [14] Standardization Administration of China, *Information security technology — Public key cryptographic algorithm SM2 based on elliptic curves — Part 2: Digital signature algorithm*, GB/T 32918.2-2016, 2016.
 

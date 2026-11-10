@@ -109,7 +109,7 @@ The mathematical signature consists of two integers. Some protocols serialize th
 The verifier receives $(M,r,s)$, the purported public key $Q$, and the P-256 domain parameters. Before performing the verification equation, the implementation must ensure that $Q$ is a valid non-identity point on the selected curve and that the key is associated with the intended domain parameters [1], [2]. It then performs the following steps:
 
 1. Reject unless $r$ and $s$ are integers in $[1,n-1]$.
-2. Compute $H=\operatorname{SHA\text{-}256(M)$ and derive the integer $e$ in the same way as the signer.
+2. Compute $H=\operatorname{SHA\text{-}256}(M)$ and derive the integer $e$ in the same way as the signer.
 3. Compute
    $$
    w=s^{-1}\bmod n,\qquad u_1=e w\bmod n,\qquad u_2=r w\bmod n. \tag{2.4.10}

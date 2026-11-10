@@ -64,6 +64,6 @@
 [19] L. K. Grover, "A fast quantum mechanical algorithm for database search," in *Proceedings of the Twenty-Eighth Annual ACM Symposium on Theory of Computing (STOC '96)*, Philadelphia, PA, 1996, pp. 212–219, doi: 10.1145/237814.237866.  
 *Supports:* Analysis of quantum quadratic speedup against unstructured search and symmetric primitives.
 
-[20] M. Ounsworth, J. Gray, and M. Pala, "Composite Signatures For Use In Internet PKI," Internet Engineering Task Force (IETF), Internet-Draft draft-ietf-lamps-pq-composite-sigs-03, Dec. 2023.  
-*Supports:* Specification for hybrid/composite dual signatures combining classical algorithms with post-quantum algorithms in banking PKI.
+[20] M. Ounsworth, J. Gray, M. Pala, J. Klaußner, and S. Fluhrer, "Composite Module-Lattice-Based Digital Signature Algorithm (ML-DSA) for Use in X.509 Public Key Infrastructure," RFC 10073, Nov. 2026, doi: 10.17487/RFC10073.
+*Supports:* Standardized composite ML-DSA combinations with traditional signature algorithms for X.509 PKI, subject to the security and operational constraints stated in the RFC.
 

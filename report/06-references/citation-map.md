@@ -12,6 +12,7 @@ Use this map only when assembling the final report. The left side is the citatio
 | 2.5 ML-DSA | 1→2, 2→34, 3→33, 4→35, 5→36, 6→37, 7→6, 8→38, 9→39 |
 | 3 Banking workflow | 1→5, 2→40, 3→41, 4→7, 5→8, 6→18, 7→30, 8→4, 9→1, 10→2, 11→3, 12→42, 13→43, 14→13, 15→44, 16→45 |
 | 4 Testing and benchmark | 1→1, 2→8, 3→13, 4→2, 5→46, 6→47, 7→30, 8→48, 9→49, 10→50, 11→31, 12→20, 13→51, 14→52, 15→27, 16→53 |
+| 4.3 Quantum theoretical analysis | 1→6, 2→54, 3→25, 4→2, 5→34, 6→55 |
 
 ## Assembly check
 

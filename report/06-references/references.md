@@ -14,7 +14,7 @@ The following consolidated IEEE-style list removes duplicate entries by DOI, RFC
 
 [6] P. W. Shor, "Algorithms for quantum computation: Discrete logarithms and factoring," in *Proc. 35th Annu. Symp. Foundations of Computer Science*, pp. 124-134, 1994, doi: 10.1109/SFCS.1994.365700.
 
-[7] E. Rescorla, "The Transport Layer Security (TLS) Protocol Version 1.3," RFC 9846, July 2026, doi: 10.17487/RFC9846.
+[7] E. Rescorla, "The Transport Layer Security (TLS) Protocol Version 1.3," RFC 9846, July 2026, doi: 10.17487/RFC9846. [Online]. Available: https://www.rfc-editor.org/rfc/rfc9846.html
 
 [8] S. Josefsson and I. Liusvaara, "Edwards-Curve Digital Signature Algorithm (EdDSA)," RFC 8032, Jan. 2017, doi: 10.17487/RFC8032.
 
@@ -32,7 +32,7 @@ The following consolidated IEEE-style list removes duplicate entries by DOI, RFC
 
 [15] Standardization Administration of China, *Information Security Technology - SM3 Cryptographic Hash Algorithm*, GB/T 32905-2016, 2016.
 
-[16] S. Zhang, D. Lee, R. Wang, D. Zhang, and T. Yao, "SM2 Digital Signature Algorithm for DNSSEC," RFC 9563, Dec. 2024, doi: 10.17487/RFC9563.
+[16] S. Zhang, D. Lee, R. Wang, D. Zhang, and T. Yao, "SM2 Digital Signature Algorithm for DNSSEC," RFC 9563, Dec. 2024, doi: 10.17487/RFC9563. [Online]. Available: https://www.rfc-editor.org/rfc/rfc9563.html
 
 [17] R. L. Rivest, A. Shamir, and L. Adleman, "A method for obtaining digital signatures and public-key cryptosystems," *Communications of the ACM*, vol. 21, no. 2, pp. 120-126, Feb. 1978, doi: 10.1145/359340.359342.
 
@@ -78,7 +78,7 @@ The following consolidated IEEE-style list removes duplicate entries by DOI, RFC
 
 [38] L. K. Grover, "A fast quantum mechanical algorithm for database search," in *Proc. 28th Annu. ACM Symp. Theory of Computing*, pp. 212-219, 1996, doi: 10.1145/237814.237866.
 
-[39] M. Ounsworth, J. Gray, M. Pala, J. Klaußner, and S. Fluhrer, "Composite Module-Lattice-Based Digital Signature Algorithm (ML-DSA) for Use in X.509 Public Key Infrastructure," RFC 10073, Nov. 2026, doi: 10.17487/RFC10073.
+[39] M. Ounsworth, J. Gray, M. Pala, J. Klaußner, and S. Fluhrer, "Composite Module-Lattice-Based Digital Signature Algorithm (ML-DSA) for Use in X.509 Public Key Infrastructure," RFC 10073, Nov. 2026, doi: 10.17487/RFC10073. [Online]. Available: https://www.rfc-editor.org/rfc/rfc10073.html
 
 [40] D. Cooper, S. Santesson, S. Farrell, S. Boeyen, R. Housley, and W. Polk, "Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile," RFC 5280, May 2008, doi: 10.17487/RFC5280.
 
@@ -86,7 +86,7 @@ The following consolidated IEEE-style list removes duplicate entries by DOI, RFC
 
 [42] International Organization for Standardization, *Financial Services - Universal Financial Industry Message Scheme*, ISO 20022, 2022. [Online]. Available: https://www.iso20022.org/. Accessed: Nov. 8, 2026.
 
-[43] PCI Security Standards Council, *PCI PTS Hardware Security Module Modular Security Requirements*, version 4.0, 2021.
+[43] PCI Security Standards Council, *PCI PIN Transaction Security (PTS) Hardware Security Module (HSM) Modular Security Requirements*, version 5.0, May 2026. [Online]. Available: https://blog.pcisecuritystandards.org/pci-ssc-publishes-pci-pts-hsm-v5.0
 
 [44] United Nations Commission on International Trade Law, *UNCITRAL Model Law on Electronic Signatures with Guide to Enactment*, United Nations, 2001.
 
@@ -107,3 +107,7 @@ The following consolidated IEEE-style list removes duplicate entries by DOI, RFC
 [52] J. M. Pollard, "A Monte Carlo method for factorization," *BIT Numerical Mathematics*, vol. 15, no. 3, pp. 331-334, 1975, doi: 10.1007/BF01933667.
 
 [53] P. C. van Oorschot and M. J. Wiener, "Parallel collision search with cryptanalytic applications," *Journal of Cryptology*, vol. 12, no. 1, pp. 1-28, 1999, doi: 10.1007/PL00003816.
+
+[54] M. Roetteler, M. Naehrig, K. M. Svore, and K. Lauter, "Quantum resource estimates for computing elliptic curve discrete logarithms," in *Advances in Cryptology - ASIACRYPT 2017*, pp. 241-270, 2017, doi: 10.1007/978-3-319-70697-9_9.
+
+[55] D. Moody, R. Perlner, A. Robinson, A. Regenscheid, and D. Cooper, *Transition to Post-Quantum Cryptography Standards*, NIST Interagency/Internal Report 8547, Oct. 2026, doi: 10.6028/NIST.IR.8547.
